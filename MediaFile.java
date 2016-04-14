@@ -4,7 +4,7 @@ package com.example.anoop.tcp_client;
  * Created by Anoop on 4/9/2016.
  */
 
-public class MediaFile {
+class MediaFile {
     String file;
 
     public MediaFile(){
@@ -19,6 +19,6 @@ public class MediaFile {
     }
 
     public void extract_and_set(String raw){
-        //
+        file = raw.substring(1);
     }
 }

@@ -9,7 +9,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 
 import com.example.anoop.tcp_client.MediaFile;
@@ -22,10 +24,11 @@ class TCP_connection
 
     String FromServer;
     String ToServer;
-    String server_addr;
+    //String server_addr;
     int server_port;
 
     Status status = Status.disconnected;
+    InetAddress server_addr;
     Socket clientSocket;
     BufferedReader inFromServer;
     PrintWriter outToServer;
@@ -37,14 +40,14 @@ class TCP_connection
     }
 */
 
-    public TCP_connection(String ip_addr, int port){
+    public TCP_connection(String ip_addr, int port) throws UnknownHostException {
         //IP ADDRESS : Case 1
         if(ip_addr.equals("localhost")){
-            server_addr = ip_addr;
+            server_addr = InetAddress.getLocalHost();
         }
         //IP ADDRESS : Case 2
         if(IP_checker.match_ip(ip_addr) == true){
-            server_addr = ip_addr;
+            server_addr = InetAddress.getByName(ip_addr);
         }
         else {
             Log.i("TCP_connection", "Invalid server address : " + ip_addr);
@@ -61,7 +64,6 @@ class TCP_connection
     public void connect_now() throws Exception
     {
         clientSocket = new Socket(server_addr, server_port);
-
         outToServer = new PrintWriter(clientSocket.getOutputStream(),true);
         inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         status = Status.connected;

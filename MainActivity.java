@@ -27,9 +27,12 @@ public class MainActivity extends AppCompatActivity {
                 if(editText_IPaddr.getText() != null){
                     server_ip = editText_IPaddr.getText().toString();
                     //label.setText(server_ip);
-                    Intent intent = new Intent(MainActivity.this, ScreenControls.class);
-                    startActivity(intent);
-                    finish();
+                    if(!server_ip.isEmpty() && server_ip != null) {
+                        Intent intent = new Intent(MainActivity.this, ScreenControls.class);
+                        intent.putExtra("ip_addr", server_ip);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
         });

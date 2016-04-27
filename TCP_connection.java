@@ -18,6 +18,8 @@ import com.example.anoop.tcp_client.MediaFile;
 
 class TCP_connection
 {
+    private static final String TAG = "TCP_connection";
+
     enum Status{
         connected, disconnected
     }
@@ -40,29 +42,32 @@ class TCP_connection
     }
 */
 
-    public TCP_connection(String ip_addr, int port) throws UnknownHostException {
-        //IP ADDRESS : Case 1
-        if(ip_addr.equals("localhost")){
-            server_addr = InetAddress.getLocalHost();
-        }
-        //IP ADDRESS : Case 2
-        if(IP_checker.match_ip(ip_addr) == true){
-            server_addr = InetAddress.getByName(ip_addr);
-        }
-        else {
-            Log.i("TCP_connection", "Invalid server address : " + ip_addr);
+    public TCP_connection(String ip_addr, int port) {
+        try {
+            //IP ADDRESS : Case 1
+            if(ip_addr.equals("localhost")){
+                server_addr = InetAddress.getLocalHost();
+            }
+            //IP ADDRESS : Case 2
+            if(IP_checker.match_ip(ip_addr) == true){
+                server_addr = InetAddress.getByName(ip_addr);
+            }
+            else {
+                Log.e(TAG, "Invalid server address : " + ip_addr);
+            }
+        } catch (UnknownHostException e) {
+            Log.e(TAG, "Unknown Host Exception caught");
         }
         //PORT
         if(port >= 1 && port <= 65535) {
             server_port = port;
         }
         else {
-            Log.i("TCP_connection", "Invalid port : " + ip_addr);
+            Log.e(TAG, "Invalid port : " + ip_addr);
         }
     }
 
-    public void connect_now() throws Exception
-    {
+    public void connect_now() throws Exception {
         clientSocket = new Socket(server_addr, server_port);
         outToServer = new PrintWriter(clientSocket.getOutputStream(),true);
         inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -91,6 +96,14 @@ class TCP_connection
         outToServer.println(line);
     }
 
+    public void temp_write_line(String line) throws IOException {
+        clientSocket = new Socket(server_addr, server_port);
+        outToServer = new PrintWriter(clientSocket.getOutputStream(),true);
+        inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        status = Status.connected;
+        outToServer.println(line);
+    }
+
     public LinkedList read_bulkMediaFile() throws IOException {
         if(status == Status.connected) {
             LinkedList<MediaFile> mfLL = new LinkedList<MediaFile>();
@@ -105,7 +118,7 @@ class TCP_connection
             }
             return mfLL;
         }
-        Log.i("TCP_connection","read_bulkMediaFile : Not connected to server");
+        Log.e(TAG, "read_bulkMediaFile : Not connected to server");
         return null;
     }
 
@@ -114,7 +127,7 @@ class TCP_connection
             MediaFile mf = new MediaFile(inFromServer.readLine());
             return mf;
         }
-        Log.i("TCP_connection","read_MediaFile : Not connected to server");
+        Log.e(TAG, "read_MediaFile : Not connected to server");
         return null;
     }
 
@@ -122,7 +135,7 @@ class TCP_connection
         if(status == Status.connected) {
             return (inFromServer.readLine());
         }
-        Log.i("TCP_connection","read_line : Not connected to server");
+        Log.e(TAG, "read_line : Not connected to server");
         return null;
     }
 
@@ -130,6 +143,6 @@ class TCP_connection
         if(status == Status.connected){
             clientSocket.close();
         }
-        Log.i("TCP_connection","close_connection : Not connected to server");
+        Log.e(TAG, "close_connection : Not connected to server");
     }
 }

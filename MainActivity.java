@@ -3,12 +3,15 @@ package com.example.anoop.tcp_client;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static String TAG = "MainActivity";
 
     String server_ip;
 
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
                     if(!server_ip.isEmpty() && server_ip != null) {
                         Intent intent = new Intent(MainActivity.this, ScreenControls.class);
                         intent.putExtra("ip_addr", server_ip);
+                        Log.v(TAG, "Clicked Submit with IP : " + server_ip);
                         startActivity(intent);
                         finish();
                     }

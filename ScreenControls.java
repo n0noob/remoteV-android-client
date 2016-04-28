@@ -39,7 +39,7 @@ public class ScreenControls extends AppCompatActivity {
                                     //Open the connection
                                     con1.connect_now();
 
-                                    con1.write_line("$PLAY/home/anoop/Downloads/Dexter - Season 1 - BRRip - x264 - AC3 5.1 -={SPARROW}=-/Dexter S01 E06 - BRRip - x264 - AC3 5.1 -={SPARROW}=-.mkv");
+                                    con1.write_line("Hello from G3");
                                     //Close the connection
                                     con1.close_connection();
                                 } catch (Exception e) {
